@@ -79,7 +79,7 @@ function deletarElemento(elemento) {
 
   elemento.parentNode.remove();
 
-  itens.splice(id, 1);
+  itens.splice(itens.findIndex(elemento => elemento.id === id), 1);
 
   localStorage.setItem("itens", JSON.stringify(itens));
 }
