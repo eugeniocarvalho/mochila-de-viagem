@@ -23,10 +23,10 @@ form.addEventListener('submit', event => {
     itemAtual.id = existe.id;
     atualizarElemento(itemAtual);
 
-    itens[existe.id] = itemAtual;
+    itens[itens.findIndex(elemento => elemento.id === itemAtual.id)] = itemAtual;
   }
   else {
-    itemAtual.id = itens.length;
+    itemAtual.id = itens[itens.length - 1] ? itens[itens.length - 1].id + 1 : 0;
 
     itens.push(itemAtual);
     
@@ -78,8 +78,9 @@ function deletarElemento(elemento) {
   id = elemento.parentNode.querySelector('[data-id]').dataset.id;
 
   elemento.parentNode.remove();
+  console.log(id)
 
-  itens.splice(itens.findIndex(elemento => elemento.id === id), 1);
-
+  console.log(itens.findIndex(elemento => elemento.id === id))
+  itens.splice(itens.findIndex(elemento => elemento.id === id) - 1, 1);
   localStorage.setItem("itens", JSON.stringify(itens));
 }
