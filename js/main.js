@@ -12,7 +12,7 @@ form.addEventListener('submit', event => {
   const quantidade = form.quantidade;
 
   const itemAtual = {
-    "nome": nome.value.replace(/(\b[a-zéàá](?!\s))/g, function(x){return x.toUpperCase();}),
+    "nome": nome.value,
     "quantidade": quantidade.value
   };
 
