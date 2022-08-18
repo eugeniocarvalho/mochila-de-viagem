@@ -2,6 +2,7 @@ const form = document.getElementById('novoItem');
 const lista = document.getElementById('lista');
 const itens = JSON.parse(localStorage.getItem("itens")) || [];
 
+
 itens.forEach(item => {
   criarElemento(item);
 });
@@ -16,14 +17,33 @@ form.addEventListener('submit', event => {
     "quantidade": quantidade.value
   };
 
-  itens.push(itemAtual);
+  const existe = itens.find(elemento => elemento.nome === nome.value);
 
+  if (existe) {
+    itemAtual.id = existe.id;
+    atualizarElemento(itemAtual);
+
+    itens[existe.id] = itemAtual;
+  }
+  else {
+    itemAtual.id = itens.length;
+
+    itens.push(itemAtual);
+    
+    criarElemento(itemAtual);
+  }
+  
   localStorage.setItem("itens", JSON.stringify(itens));
-
-  criarElemento(itemAtual);
 
   nome.value = '';
   quantidade.value = '';
+});
+
+lista.addEventListener('click', event => {
+  if (event.target.id === 'deletar') {
+    deletarElemento(event.target);
+
+  }
 });
 
 function criarElemento(item) {
@@ -32,9 +52,34 @@ function criarElemento(item) {
 
   novoItem.classList.add('item');
   numeroItem.textContent = item.quantidade;
+  numeroItem.dataset.id = item.id;
 
   novoItem.appendChild(numeroItem);
   novoItem.innerHTML += item.nome;
+  novoItem.appendChild(criarBotaoDeleta());
 
   lista.appendChild(novoItem);  
+}
+
+function atualizarElemento(item) {
+  document.querySelector(`[data-id='${item.id}']`).innerHTML = item.quantidade;
+}
+
+function criarBotaoDeleta() {
+  const icone = document.createElement('img');
+
+  icone.src = 'img/x.png';
+  icone.id = 'deletar';
+
+  return icone;
+}
+
+function deletarElemento(elemento) {
+  id = elemento.parentNode.querySelector('[data-id]').dataset.id;
+
+  elemento.parentNode.remove();
+
+  itens.splice(id, 1);
+
+  localStorage.setItem("itens", JSON.stringify(itens));
 }
