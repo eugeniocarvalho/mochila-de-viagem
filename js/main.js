@@ -3,7 +3,7 @@ const lista = document.getElementById('lista');
 const itens = JSON.parse(localStorage.getItem("itens")) || [];
 
 itens.forEach(item => {
-  console.log(item);
+  criarElemento(item);
 });
 
 form.addEventListener('submit', event => {
@@ -11,30 +11,30 @@ form.addEventListener('submit', event => {
   const nome = form.nome;
   const quantidade = form.quantidade;
 
-  criarElemento(nome.value, quantidade.value);
-
-  nome.value = '';
-  quantidade.value = '';
-});
-
-function criarElemento(nome, quantidade) {
-  const novoItem = document.createElement('li');
-  const numeroItem = document.createElement('strong');
-
-  novoItem.classList.add('item');
-  numeroItem.textContent = quantidade;
-
-  novoItem.appendChild(numeroItem);
-  novoItem.innerHTML += nome;
-
-  lista.appendChild(novoItem);
-
   const itemAtual = {
-    "nome": nome,
-    "quantidade": quantidade
+    "nome": nome.value.replace(/(\b[a-zéàá](?!\s))/g, function(x){return x.toUpperCase();}),
+    "quantidade": quantidade.value
   };
 
   itens.push(itemAtual);
 
   localStorage.setItem("itens", JSON.stringify(itens));
+
+  criarElemento(itemAtual);
+
+  nome.value = '';
+  quantidade.value = '';
+});
+
+function criarElemento(item) {
+  const novoItem = document.createElement('li');
+  const numeroItem = document.createElement('strong');
+
+  novoItem.classList.add('item');
+  numeroItem.textContent = item.quantidade;
+
+  novoItem.appendChild(numeroItem);
+  novoItem.innerHTML += item.nome;
+
+  lista.appendChild(novoItem);  
 }
